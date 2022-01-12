@@ -47,6 +47,8 @@ If we want to pass or return a string, we need to a place for the string to be s
 
 `memory` keyword provides a temporary storage space for the user to store data in.
 
+There is also a `storage` keyword that provides a persistent storage space for users.
+
 ## Example
 
 ```ts
@@ -72,6 +74,13 @@ contract StringExercise{
     }
 }
 ```
+
+# Global Variables & Important Functions
+
+[Global Variables](https://docs.soliditylang.org/en/v0.8.10/cheatsheet.html?highlight=msg.sender#global-variables)
+
+[Units and Globally Available Variables](https://docs.soliditylang.org/en/v0.8.9/units-and-global-variables.html)
+
 
 # Operators and Precedence
 
@@ -134,7 +143,9 @@ contract owned {
             msg.sender == owner,
             "Only owner can call this function."
         );
-        _;
+        _; 
+        // the '_' is important. It is the the place where the
+        // function body will get copied to.
     }
 }
 
@@ -211,16 +222,6 @@ contract Mutex {
 
 - `internal`: only visible internally (inheritance)
 
-## Fallback Functions
-
-PENDING
-
-# Global Variables & Important Functions
-
-[Global Variables](https://docs.soliditylang.org/en/v0.8.10/cheatsheet.html?highlight=msg.sender#global-variables)
-
-[Units and Globally Available Variables](https://docs.soliditylang.org/en/v0.8.9/units-and-global-variables.html)
-
 # Control Flow
 
 Solidity currently only supports if statements.
@@ -244,6 +245,15 @@ function getResult() public view returns(uint memory) {
 ```
 
 Solidity also supports `<conditional> ? <if-true> : <if-false>`.
+
+# Error Handling
+
+| Function                                              | Description                                                                                                                                                                        |
+|:-----------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| `assert(bool condition)`                              | In case the `condition` is not met, the methods causes and invalid opcode and any changes done to the state get reverted. This method is to be used for internal errors.           |
+| `require(bool condition, string memory message = "")` | In case the `condition` is not met, the method call reverts to its original state. The method is to be used for inputs or external components. Returns the `message` if specified. |
+| `revert(string memory message = "")`                  | Method aborts the contract execution and reverts any changes done to the state. Returns the `message` if specified.                                                                |
+
 
 # Loops
 
@@ -349,6 +359,35 @@ contract Structs {
 }
 ```
 
+
+# Events
+
+Contracts need to ping the ethereum virtual machine (blockchain) after certain events. For that functionality we use Solidity events. 
+
+Solidity events are declared with the `event` keyword and are emitted using the `emit` keyword.
+
+```typescript
+event Transfer(address indexed from, address indexed to, uint256 value);
+
+
+function _mint(address account, uint256 amount) internal virtual {
+    require(account != address(0), "ERC20: mint to the zero address");
+
+    _beforeTokenTransfer(address(0), account, amount);
+
+    _totalSupply += amount;
+    _balances[account] += amount;
+
+    emit Transfer(address(0), account, amount);
+
+    _afterTokenTransfer(address(0), account, amount);
+}
+```
+
+# `fallback` and `recieve` functions
+
+[fallback and receive split - soliditylang](https://blog.soliditylang.org/2020/03/26/fallback-receive-split/)
+
 # Constructor
 
 - A contract can have only one constructor.
@@ -390,17 +429,9 @@ contract Derived is Base{
 }
 ```
 
-# Error Handling
-
-| Function                                              | Description                                                                                                                                                                        |
-|:-----------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| `assert(bool condition)`                              | In case the `condition` is not met, the methods causes and invalid opcode and any changes done to the state get reverted. This method is to be used for internal errors.           |
-| `require(bool condition, string memory message = "")` | In case the `condition` is not met, the method call reverts to its original state. The method is to be used for inputs or external components. Returns the `message` if specified. |
-| `revert(string memory message = "")`                  | Method aborts the contract execution and reverts any changes done to the state. Returns the `message` if specified.                                                                |
-
 # Interfaces
 
-**Interfaces are used to interact with other contracts that are already deployed onto the blockchain.**
+**Interfaces are the blueprints for a contract are also used to interact with other contracts that are already deployed onto the blockchain.**
 
 ## Example
 
@@ -433,6 +464,11 @@ contract MyContract {
     }
 }
 ```
+
+# `selfdestruct`
+
+`selfdestruct(address payable recipient)` destroys the current contract, sending its funds to the given address.
+
 
 # Library
 
@@ -512,8 +548,6 @@ contract Test {
 
 - [ ] `super` keyword
 
-- [ ] **Events**
-
-- [ ] `fallback` and `receive` functions
+- [ ] `selector` keyword
 
 - [ ] [Ethereum Inline Assembly](https://www.ethervm.io/)
