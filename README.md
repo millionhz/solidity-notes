@@ -75,9 +75,9 @@ contract StringExercise{
 }
 ```
 
-# Global Variables & Important Functions
+# Built-in Globals & Important Functions
 
-[Global Variables](https://docs.soliditylang.org/en/v0.8.10/cheatsheet.html?highlight=msg.sender#global-variables)
+[Built-in Globals](https://docs.soliditylang.org/en/v0.8.10/cheatsheet.html?highlight=msg.sender#global-variables)
 
 [Units and Globally Available Variables](https://docs.soliditylang.org/en/v0.8.9/units-and-global-variables.html)
 
